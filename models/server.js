@@ -6,7 +6,9 @@ class Server{
     constructor(){
         this.app = express();
         this.port = process.env.PORT;
+        // Definir los endpoint
         this.usuariosRoutePath = '/api/usuarios';
+        this.authRoutePath = '/api/auth';
 
         // Conectar a Base de datos
         this.conectarDb();
@@ -34,7 +36,10 @@ class Server{
     }
 
     routes(){
+        // Definir o relacionar los endpoint y los router
+        this.app.use(this.authRoutePath, require('../routes/authrouter'));
         this.app.use(this.usuariosRoutePath, require('../routes/userrouter'));
+
     }
 
     listen(){

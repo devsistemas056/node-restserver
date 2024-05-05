@@ -5,9 +5,15 @@ const {
     check
 } = require('express-validator');
 
+// const { validarCampos } = require('../middlewares/validar-campos');
+// const { validarJWT } = require('../middlewares/validar.jwt');
+// const { esAdminRole, tieneRol } = require('../middlewares/validar-roles');
 const {
-    validarCampos
-} = require('../middlewares/validar-campos');
+    validarCampos,
+    validarJWT,
+    esAdminRole, tieneRol
+} = require('../middlewares');       // Por defecto buscara el archuvi index.js o se puede agregar a la referencia('/index')
+
 const {
     validaRole,
     validaSiExisteEmail,
@@ -20,6 +26,8 @@ const {
     usuariosUpdate,
     usuariosDelete
 } = require('../controllers/usercontroller');
+
+
 
 const router = Router();
 
@@ -34,7 +42,7 @@ router.post('/', [
     check('correo', 'El correo no es valido').isEmail(),
     check('correo').custom(validaSiExisteEmail),
     // check('rol', 'El Rol no es valido no es valido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
-    //check('rol').custom((rol='')=>validaRole(rol) ), // cuando es solo un parametro se puede usar de esta forma, o como sigue en la sigueinte linea
+    //check('rol').custom((rol='')=>validaRole(rol) ), // cuando es solo un parametro se puede usar de esta forma, o como sigue en la siguiente linea
     check('rol').custom(validaRole),
     validarCampos
 ], usuariosPost);
@@ -48,6 +56,9 @@ router.put('/:id',[
 ], usuariosUpdate);
 
 router.delete('/:id', [
+    validarJWT,
+    esAdminRole,    // Este middlware bloque si no es AMDMIN_ROLE
+    tieneRol('ADMIN_ROLE', 'VENTAS_ROLE'),  // Y este middleware bloquea si el usuario autenticado no tiene uno de esos roles indicados
     check('id', 'No es un id valido').isMongoId(),
     check('id').custom(validaSiExisteUsuarioById),
     validarCampos

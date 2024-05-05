@@ -36,7 +36,8 @@ const UsuarioSchema = Schema({
 // Para definir que datos queremos devolver en el response
 // para este ejemplo excluimos los datos __v y password
 UsuarioSchema.methods.toJSON = function() {
-    const { __v, password, ...usuario  } = this.toObject();
+    const { __v, password, _id, ...usuario  } = this.toObject();
+    usuario.uid = _id;
     return usuario;
 }
 
