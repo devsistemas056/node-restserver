@@ -72,6 +72,7 @@ const usuariosDelete = async(req, res = response)=>{
 };
 
 
+
 module.exports = {
     usuariosGetAll,
     usuariosPost,
