@@ -7,17 +7,21 @@ class Server{
         this.app = express();
         this.port = process.env.PORT;
         // Definir los endpoint
-        this.usuariosRoutePath = '/api/usuarios';
-        this.authRoutePath = '/api/auth';
+        this.path = {
+            auth: '/api/auth',
+            buscar: '/api/buscar',
+            categorias: '/api/categorias',
+            productos: '/api/productos',
+            usuarios: '/api/usuarios'
+        }
 
-        // Conectar a Base de datos
+        // Conectar a Base de datos:
         this.conectarDb();
 
-        // Middlewares
+        // Middlewares:
         this.middleware();
 
-        
-        // Rutas de mi aplicacion
+        // Rutas de mi aplicacion:
         this.routes();
     }
 
@@ -37,8 +41,11 @@ class Server{
 
     routes(){
         // Definir o relacionar los endpoint y los router
-        this.app.use(this.authRoutePath, require('../routes/authrouter'));
-        this.app.use(this.usuariosRoutePath, require('../routes/userrouter'));
+        this.app.use(this.path.auth, require('../routes/authrouter'));
+        this.app.use(this.path.buscar, require('../routes/buscarrouter'));
+        this.app.use(this.path.categorias, require('../routes/categoriasrouter'));
+        this.app.use(this.path.productos, require('../routes/productosrouter'));
+        this.app.use(this.path.usuarios, require('../routes/userrouter'));
 
     }
 
